@@ -1,0 +1,23 @@
+groups:
+  - name: temperature-alerts
+    interval: 15s
+    rules:
+      # 1. Cảnh báo CPU > 80°C trong 1 phút
+      - alert: HighCPUTemperature
+        expr: node_hwmon_temp_celsius{name=~"k10temp.*"} > 80
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "CPU temperature high ({{ $labels.instance }})"
+          description: "CPU temperature on {{ $labels.instance }} is above 80°C (current: {{ $value }}°C)."
+
+      # 2. Cảnh báo NVMe > 70°C trong 5 phút
+      - alert: HighNVMeTemperature
+        expr: node_hwmon_temp_celsius{name=~"nvme.*"} > 70
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "NVMe temperature high ({{ $labels.instance }})"
+          description: "NVMe temperature on {{ $labels.instance }} is above 70°C (current: {{ $value }}°C)."
