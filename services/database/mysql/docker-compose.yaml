@@ -42,6 +42,8 @@ services:
     environment:
       - ADMINER_DEFAULT_SERVER=mysql
       - TZ=Asia/Ho_Chi_Minh
+    volumes:
+      - ../../configs/database/mysql/adminer.css:/var/www/html/adminer.css:ro
     depends_on:
       mysql:
         condition: service_healthy
