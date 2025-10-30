@@ -17,8 +17,8 @@ services:
       --max_connections=200
       --innodb_buffer_pool_size=2G
     volumes:
-      - ../../data/database/mysql:/var/lib/mysql
-      - ../../configs/database/mysql/my.cnf:/etc/mysql/conf.d/my.cnf:ro
+      - ../../../data/database/mysql:/var/lib/mysql
+      - ../../../configs/database/mysql/my.cnf:/etc/mysql/conf.d/my.cnf:ro
     healthcheck:
       test: ["CMD-SHELL", "mysqladmin ping -h 127.0.0.1 -uroot -p$${MYSQL_ROOT_PASSWORD} || exit 1"]
       interval: 10s
@@ -43,7 +43,7 @@ services:
       - ADMINER_DEFAULT_SERVER=mysql
       - TZ=Asia/Ho_Chi_Minh
     volumes:
-      - ../../configs/database/mysql/adminer.css:/var/www/html/adminer.css:ro
+      - ../../../configs/database/mysql/adminer.css:/var/www/html/adminer.css:ro
     depends_on:
       mysql:
         condition: service_healthy
