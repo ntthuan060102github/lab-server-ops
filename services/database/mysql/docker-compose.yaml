@@ -17,17 +17,17 @@ services:
       --max_connections=200
       --innodb_buffer_pool_size=2G
     volumes:
-      - ./data/mysql:/var/lib/mysql
-      - ./configs/mysql/my.cnf:/etc/mysql/conf.d/my.cnf:ro
+      - ../../data/database/mysql:/var/lib/mysql
+      - ../../configs/database/mysql/my.cnf:/etc/mysql/conf.d/my.cnf:ro
     healthcheck:
       test: ["CMD-SHELL", "mysqladmin ping -h 127.0.0.1 -uroot -p$${MYSQL_ROOT_PASSWORD} || exit 1"]
       interval: 10s
       timeout: 5s
       retries: 5
       start_period: 20s
-    cpus: "2.0"
-    mem_limit: 4g
-    mem_reservation: 1g
+    # cpus: "2.0"
+    # mem_limit: 4g
+    # mem_reservation: 1g
     stop_signal: SIGTERM
     stop_grace_period: 30s
     networks:

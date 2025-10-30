@@ -27,8 +27,6 @@ services:
       GF_USERS_ALLOW_SIGN_UP: "false"
     volumes:
       - ../../data/monitoring/grafana:/var/lib/grafana
-      # Nếu bạn có provisioning sẵn, mở dòng dưới:
-      # - ../../configs/monitoring/grafana/provisioning:/etc/grafana/provisioning:ro
     ports:
       - "3000:3000"
     depends_on: [prometheus]
