@@ -1,0 +1,26 @@
+services:
+  redis:
+    image: redis:7.2-alpine
+    container_name: redis
+    restart: unless-stopped
+    command: ["redis-server", "/usr/local/etc/redis/redis.conf"]
+    ports:
+      - 6379:6379
+    volumes:
+      - ../../../configs/database/redis/redis.conf:/usr/local/etc/redis/redis.conf:ro
+      - ../../../data/database/redis:/data
+    environment:
+      - TZ=Asia/Ho_Chi_Minh
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    stop_signal: SIGTERM
+    stop_grace_period: 20s
+    networks:
+      - lab
+
+networks:
+  lab:
+    external: true
