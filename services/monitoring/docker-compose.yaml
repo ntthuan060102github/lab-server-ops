@@ -74,7 +74,7 @@ services:
     volumes:
       - /sys/class/power_supply:/sys/class/power_supply:ro
       - ../../data/monitoring/node_exporter/textfile_collector:/textfile_collector
-      - ./battery_exporter.sh:/entrypoint.sh:ro
+      - ./collect_battery.sh:/entrypoint.sh:ro
     entrypoint: ["/bin/sh","/entrypoint.sh"]
     networks: [lab]
 
