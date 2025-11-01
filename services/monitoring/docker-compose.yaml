@@ -55,6 +55,7 @@ services:
       - --path.sysfs=/host/sys
       - --path.rootfs=/rootfs
       - --collector.filesystem.mount-points-exclude=^/(dev|proc|sys|var/lib/docker/.+)($|/)
+      - --collector.textfile.directory=/textfile_collector
     volumes:
       - /proc:/host/proc:ro
       - /sys:/host/sys:ro
@@ -62,6 +63,42 @@ services:
     ports:
       - "9100:9100"
     restart: unless-stopped
+    networks: [lab]
+
+  battery-exporter:
+    image: alpine:3.20
+    container_name: battery-exporter
+    restart: unless-stopped
+    environment:
+      - SCRAPE_INTERVAL=60
+    volumes:
+      - /sys/class/power_supply:/sys/class/power_supply:ro
+      - ../../data/monitoring/node_exporter/textfile_collector:/textfile_collector
+    entrypoint: ["/bin/sh","-c"]
+    command: >
+      while true; do
+        BAT=$(ls -d /sys/class/power_supply/BAT* 2>/dev/null | head -n1);
+        if [ -n "$BAT" ]; then
+          CAP=$(cat "$BAT/capacity" 2>/dev/null || echo "");
+          STAT=$(cat "$BAT/status"   2>/dev/null || echo "Unknown");
+          if [ -n "$CAP" ]; then
+            {
+              echo "# HELP battery_capacity Battery charge percentage";
+              echo "# TYPE battery_capacity gauge";
+              echo "battery_capacity $CAP";
+              echo "# HELP battery_status 0=Discharging,1=Charging,2=Unknown";
+              echo "# TYPE battery_status gauge";
+              case "$STAT" in
+                Charging)   VAL=1 ;;
+                Discharging) VAL=0 ;;
+                *)          VAL=2 ;;
+              esac
+              echo "battery_status $VAL";
+            } > /textfile_collector/battery.prom
+          fi
+        fi
+        sleep ${SCRAPE_INTERVAL:-60};
+      done
     networks: [lab]
 
 networks:
