@@ -17,7 +17,7 @@ scrape_configs:
 
   - job_name: cloudflared
     static_configs:
-      - targets: ["127.0.0.1:60123"]
+      - targets: ["host.docker.internal:60123"]
 
 rule_files:
   - "alert_rules.yml"
