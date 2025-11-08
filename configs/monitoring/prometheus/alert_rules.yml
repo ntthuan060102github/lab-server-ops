@@ -4,7 +4,7 @@ groups:
     rules:
       # 1. Cảnh báo CPU > 80°C trong 1 phút
       - alert: HighCPUTemperature
-        expr: node_hwmon_temp_celsius{name=~"k10temp.*"} > 80
+        expr: node_hwmon_temp_celsius{name=~"k10temp.*"} > 65
         for: 1m
         labels:
           severity: critical
